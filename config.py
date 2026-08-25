@@ -5,17 +5,15 @@ API_ID = 33319256
 API_HASH = "6b2a9c9c721fe7cdce6fc054e2565e30"
 
 # Bot token from @BotFather
-BOT_TOKEN = "7793461414:AAHSHVLCi2eAQtYt_kMJ8OumTnCdmOUwVpk"
+BOT_TOKEN = "7793461414:AAE3MjqqDQduOmrXww_zpSTVFZf0LKRxL6s"
 
 
 # ================== REDIS DATABASE CONFIG ==================
 
 # Redis Host / Port / Password
-HOST = "alive-minnow-102189.upstash.io"
+HOST = "127.0.0.1"
 PORT = 6379
-PASSWORD = "gQAAAAAAAY8tAAIgcDI1MjQ4YzdjYzllNTU0NmU4YTYxZjY4YjUzODkyMDMxOA"   # Set to None if Redis has no password
-
-
+PASSWORD = None
 # ================== BOT SETTINGS ==================
 
 # Private storage chat where files are uploaded
