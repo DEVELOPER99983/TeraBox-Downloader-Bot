@@ -59,7 +59,7 @@ def extract_surl_from_url(url: str) -> str | None:
 # ---------------- API SETTINGS ---------------- #
 
 NTM_API_TEMPLATE = (
-    "https://api.NTM.com/api/terabox?key=NTMPASS&url={url}"
+    "https://teradown1.nepcoder.workers.dev/api/resolve?url={url}"
 )
 
 
@@ -89,19 +89,23 @@ def retry_request(method, url, attempts=3, delay=2, **kwargs):
 
 
 # ---------------- MAIN API HANDLER ---------------- #
-
 def get_data(url: str):
     """
-    Fetch Terabox file data via Aurixs API
-    Includes retry for API + redirect resolution
+    Fetch TeraBox file data from /api/resolve
     """
 
-    api_url = AURIXS_API_TEMPLATE.format(url=url)
+    api_url = NTM_API_TEMPLATE.format(url=url)
 
     print("\nREQUESTING API:", api_url)
 
     # -------- Retry API Call -------- #
-    res = retry_request("GET", api_url, attempts=3, delay=2)
+
+    res = retry_request(
+        "GET",
+        api_url,
+        attempts=3,
+        delay=2
+    )
 
     if not res:
         print("API failed after retries")
@@ -110,25 +114,58 @@ def get_data(url: str):
     print("API STATUS:", res.status_code)
 
     # -------- Decode JSON -------- #
+
     try:
         data = res.json()
+
     except Exception as e:
         print("JSON parse error:", e)
         return False
 
     print("API RAW RESPONSE:", data)
 
-    # -------- Validate Fields -------- #
-    fast_link = data.get("directlink")
-    if not fast_link:
-        print("Missing direct link in API response")
+    # -------- Validate API -------- #
+
+    if not data.get("ok"):
+        print("API returned ok=false")
         return False
 
-    size_bytes = int(data.get("sizebytes", 0))
+    value = data.get("value")
 
+    if not isinstance(value, dict):
+        print("Missing value object")
+        return False
+
+    files = value.get("files")
+
+    if not isinstance(files, list) or not files:
+        print("No files returned")
+        return False
+
+    # -------- First File -------- #
+
+    file_data = files[0]
+
+    # -------- Extract Fields -------- #
+
+    filename = file_data.get("name")
+    size_bytes = int(file_data.get("size") or 0)
+    thumbnail = file_data.get("thumb")
+
+    fast_link = file_data.get("downloadUrl")
+
+    stream_link = file_data.get("streamUrl")
+
+    if not fast_link:
+        print("Missing downloadUrl in API response")
+        return False
+
+    print("FILE NAME:", filename)
+    print("FILE SIZE:", size_bytes)
     print("FAST LINK:", fast_link)
 
-    # -------- Resolve Redirect (Retry) -------- #
+    # -------- Resolve Redirect -------- #
+
     head = retry_request(
         "HEAD",
         fast_link,
@@ -140,21 +177,42 @@ def get_data(url: str):
     if head:
         real_direct_url = head.url
     else:
-        print("Redirect resolve failed — using fast link fallback")
+        print(
+            "Redirect resolve failed — "
+            "using downloadUrl fallback"
+        )
+
         real_direct_url = fast_link
 
-    print("FINAL CDN URL:", real_direct_url)
+    print(
+        "FINAL CDN URL:",
+        real_direct_url
+    )
 
-    # -------- Return structure expected by main.py -------- #
+    # -------- Return Structure -------- #
+
     return {
-        "file_name": data.get("file_name"),
-        "size": data.get("size") or get_formatted_size(size_bytes),
-        "sizebytes": size_bytes,
-        "thumb": data.get("thumb"),
+        "file_name": filename,
 
-        # final resolved downloadable url
+        "size": (
+            size_bytes
+            if size_bytes
+            else get_formatted_size(size_bytes)
+        ),
+
+        "sizebytes": size_bytes,
+
+        "thumb": thumbnail,
+
         "direct_link": real_direct_url,
 
-        # backup link
         "link": fast_link,
+
+        "stream_link": stream_link,
+
+        "id": file_data.get("id"),
+
+        "type": file_data.get("type"),
+
+        "expires_at": file_data.get("expiresAt"),
     }
