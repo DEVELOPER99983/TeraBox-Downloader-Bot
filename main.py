@@ -30,8 +30,7 @@ db = redis.Redis(
     host=HOST,
     port=PORT,
     password=PASSWORD,
-    decode_responses=True,
-    ssl=True
+    decode_responses=True
 )
 
 PREMIUM_USERS_KEY = "premium_users"
