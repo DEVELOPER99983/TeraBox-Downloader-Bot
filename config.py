@@ -11,9 +11,9 @@ BOT_TOKEN = "7793461414:AAHSHVLCi2eAQtYt_kMJ8OumTnCdmOUwVpk"
 # ================== REDIS DATABASE CONFIG ==================
 
 # Redis Host / Port / Password
-HOST = "127.0.0.1"
+HOST = "healthy-gnat-139855.upstash.io"
 PORT = 6379
-PASSWORD = None   # Set to None if Redis has no password
+PASSWORD = "gQAAAAAAAiJPAAIgcDFhMzg2YWVlNGVlY2I0MTZiOGRlZWIyZWM1Yzc5ODhkNA"   # Set to None if Redis has no password
 
 
 # ================== BOT SETTINGS ==================
