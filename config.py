@@ -1,11 +1,11 @@
 # ================== TELEGRAM API CONFIG ==================
 
 # Get these from https://my.telegram.org/apps
-API_ID = 1234567
-API_HASH = "YOUR_API_HASH_HERE"
+API_ID = 33319256
+API_HASH = "6b2a9c9c721fe7cdce6fc054e2565e30"
 
 # Bot token from @BotFather
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
+BOT_TOKEN = "7793461414:AAHSHVLCi2eAQtYt_kMJ8OumTnCdmOUwVpk"
 
 
 # ================== REDIS DATABASE CONFIG ==================
@@ -20,13 +20,13 @@ PASSWORD = None   # Set to None if Redis has no password
 
 # Private storage chat where files are uploaded
 # Use your private channel / chat ID (must be integer)
-PRIVATE_CHAT_ID = -1000000000000
+PRIVATE_CHAT_ID = -1003970353038
 
 
 # Admin user IDs (MUST be integers)
 # Add multiple IDs inside list
 ADMINS = [
-    803003146,   # Example: Your Telegram ID
+    7302497948,   # Example: Your Telegram ID
     # 123456789,
 ]
 
@@ -35,11 +35,11 @@ ADMINS = [
 
 # If you still want to support single ADMIN broadcast logs etc.
 # (Used in old redeem handler — safe to keep)
-ADMIN_ID = 803003146
+ADMIN_ID = 7302497948
 
-TERABOX_API_BASE = "https://api.ntm.com/api/terabox"
-TERABOX_API_TOKEN = "NTMPASS"
+TERABOX_API_BASE = "https://teradown1.nepcoder.workers.dev/api/resolve"
+#TERABOX_API_TOKEN = "NTMPASS"
 
 TERABOX_API_TEMPLATE = (
-    f"{TERABOX_API_BASE}?key={TERABOX_API_TOKEN}&url={{url}}"
+    f"{TERABOX_API_BASE}?url={{url}}"
 )
